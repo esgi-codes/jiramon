@@ -748,6 +748,16 @@
          "spacing":0,
          "tilecount":9,
          "tileheight":32,
+         "tiles":[
+                {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"greenTicket"
+                        }]
+                }],
          "tilewidth":32
         }],
  "tilewidth":32,
