@@ -52,7 +52,11 @@ function addToInventory(issue: JiraIssue): void {
  */
 async function removeIssueFromInventory(issueId: string): Promise<void> {
     // Example call to potentially unassign the issue via API
-    const response = await axiosInstance.post('jira/unassign', { issueId: issueId });
+    const response = await axiosInstance.post('jira/issues/unassign', { issueId: issueId });
+    if (response.status !== 204) {
+        console.error('Failed to unassign issue', issueId);
+        return;
+    }
     WA.ui.actionBar.removeButton(issueId);
     WA.player.state.inventorySize -= 1;
 }
