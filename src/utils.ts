@@ -30,10 +30,17 @@ export function formatIssueString(issue: JiraIssue): string {
  */
 export function enableTicketDeletion(): void {
     WA.player.state.canRemoveTicket = true;
-    WA.player.state.trashActionMessage = WA.ui.displayActionMessage({
-        message: 'Click on a ticket in your inventory to delete it',
-        callback: () => { },
-    });
+    if (WA.player.state.inventorySize === 0) {
+        WA.player.state.trashActionMessage = WA.ui.displayActionMessage({
+            message: 'You have no tickets to delete, feel free to pick some up!',
+            callback: () => { },
+        });
+    } else {
+        WA.player.state.trashActionMessage = WA.ui.displayActionMessage({
+            message: 'Click on a ticket in your inventory to delete it',
+            callback: () => { },
+        });
+    }
 
     setTimeout(() => {
         WA.player.state.trashActionMessage.remove();
