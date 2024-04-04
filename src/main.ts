@@ -54,7 +54,7 @@ WA.ui.actionBar.addButton({
     callback: (event) => {
         console.log('Button clicked', event);
         // When a user clicks on the action bar button 'Register', we remove it.
-        WA.ui.actionBar.removeButton('register-btn');
+        WA.ui.actionBar.removeButton('btn-jiramon');
     }
 });
 
