@@ -7,9 +7,32 @@ console.log('Script started successfully');
 let currentPopup: any = undefined;
 
 // Waiting for the API to be ready
-WA.onInit().then(() => {
+WA.onInit().then(async () => {
     console.log('Scripting API ready');
     console.log('Player tags: ', WA.player.tags)
+
+    const tickets = []
+
+    tickets.forEach((ticket,index)=>{
+        const randomX = Math.floor(Math.random() * 20);
+        const randomY = Math.floor(Math.random() * 20);
+        WA.room.setTiles([
+            {
+                x: randomX,
+                y: randomY,
+                tile: "greenTicket",
+                layer: "furniture/furniture3"
+            }
+        ])
+        WA.room.setTiles([
+            {
+                x: 8,
+                y: 13,
+                tile: "greenTicket",
+                layer:"furniture/furniture3"
+            }]
+        )
+    })
 
     WA.room.area.onEnter('clock').subscribe(() => {
         const today = new Date();
