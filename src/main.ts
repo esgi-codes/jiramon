@@ -20,6 +20,16 @@ WA.onInit().then(() => {
     WA.room.area.onLeave('clock').subscribe(closePopup)
 
     WA.room.area.onEnter('ticket1').subscribe(() => {
+        const triggerMessage = WA.ui.displayActionMessage({
+            message: "Appuyer espace pour s'attribuer le ticket",
+            callback: () => {
+                WA.nav.goToPage('https://jira-mon.atlassian.net/browse/JI-1');
+            }
+        });
+        setTimeout(() => {
+            // later
+            triggerMessage.remove();
+        }, 3000)
         currentPopup = WA.ui.openPopup("ticket-popup", "Loading...", []);
 
         fetch("http://localhost:3000/jira", {
