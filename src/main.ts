@@ -45,6 +45,9 @@ WA.onInit().then(() => {
 
 }).catch(e => console.error(e));
 
+//modale
+
+
 // Add action bar Jiramon
 WA.ui.actionBar.addButton({
     id: 'btn-jiramon',
@@ -54,7 +57,13 @@ WA.ui.actionBar.addButton({
     callback: (event) => {
         console.log('Button clicked', event);
         // When a user clicks on the action bar button 'Register', we remove it.
-        WA.ui.actionBar.removeButton('btn-jiramon');
+        //WA.ui.actionBar.removeButton('btn-jiramon');
+        WA.ui.modal.openModal({
+            title: "List of Jiramon",
+            src: 'https://workadventu.re',
+            allow: "fullscreen",
+            aposition: "right",
+        });
     }
 });
 
