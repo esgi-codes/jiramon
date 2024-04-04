@@ -45,30 +45,6 @@ WA.onInit().then(() => {
 
 }).catch(e => console.error(e));
 
-/// open a youtube video in a coWebSite when entering the area
-WA.room.area.onEnter('youtube').subscribe(async () => {
-    //const url = 'https://www.youtube.com/embed/Me8cu5lLN3A?si=JNDHzv3HaUtw-EW0'
-    //WA.nav.openTab(url);
-
-    //const coWebsite = await WA.nav.openCoWebSite(url, true, "", 70, 1, true, true);
-    //const coWebsiteWorkAdventure = await WA.nav.openCoWebSite('https://workadventu.re/', true, "", 70, 1, true, true);
-    //coWebsiteWorkAdventure.close();
-    WA.nav.openCoWebSite('https://jira-mon.atlassian.net/jira/software/projects/JI/boards/1?selectedIssue=JI-1', true, "", 70, 1, true, true);
-})
-///end of youtube
-
-/// open a jira-ticket-2 video in a coWebSite when entering the area
-WA.room.area.onEnter('jira-ticket-2').subscribe(async () => {
-    //const url = 'https://www.youtube.com/embed/Me8cu5lLN3A?si=JNDHzv3HaUtw-EW0'
-    //WA.nav.openTab(url);
-
-    //const coWebsite = await WA.nav.openCoWebSite(url, true, "", 70, 1, true, true);
-    //const coWebsiteWorkAdventure = await WA.nav.openCoWebSite('https://workadventu.re/', true, "", 70, 1, true, true);
-    //coWebsiteWorkAdventure.close();
-    WA.nav.openCoWebSite('https://jira-mon.atlassian.net/jira/software/projects/JI/boards/1?selectedIssue=JI-2', true, "", 70, 1, true, true);
-})
-///end of jira-ticket-2
-
 /// open a jira-ticket-3 video in a coWebSite when entering the area
 WA.room.area.onEnter('jira-ticket-3').subscribe(async () => {
     //const url = 'https://www.youtube.com/embed/Me8cu5lLN3A?si=JNDHzv3HaUtw-EW0'
@@ -80,6 +56,15 @@ WA.room.area.onEnter('jira-ticket-3').subscribe(async () => {
     WA.nav.openCoWebSite('https://jira-mon.atlassian.net/jira/software/projects/JI/boards/1?selectedIssue=JI-3', true, "", 70, 1, true, true);
 })
 ///end of jira-ticket-3
+
+//menu test
+const menu = WA.ui.registerMenuCommand('menu test',
+    {
+        callback: () => {
+            WA.chat.sendChatMessage('test');
+        }
+    })
+menu.open();
 
 function closePopup() {
     if (currentPopup !== undefined) {
