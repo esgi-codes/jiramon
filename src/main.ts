@@ -45,27 +45,20 @@ WA.onInit().then(() => {
 
 }).catch(e => console.error(e));
 
-/// open a jira-ticket-3 video in a coWebSite when entering the area
-WA.room.area.onEnter('jira-ticket-3').subscribe(async () => {
-    //const url = 'https://www.youtube.com/embed/Me8cu5lLN3A?si=JNDHzv3HaUtw-EW0'
-    //WA.nav.openTab(url);
+// Add action bar Jiramon
+WA.ui.actionBar.addButton({
+    id: 'btn-jiramon',
+    type: 'action',
+    imageSrc: './public/images/twitter.png',
+    toolTip: 'Liste des jiramon',
+    callback: (event) => {
+        console.log('Button clicked', event);
+        // When a user clicks on the action bar button 'Register', we remove it.
+        WA.ui.actionBar.removeButton('register-btn');
+    }
+});
 
-    //const coWebsite = await WA.nav.openCoWebSite(url, true, "", 70, 1, true, true);
-    //const coWebsiteWorkAdventure = await WA.nav.openCoWebSite('https://workadventu.re/', true, "", 70, 1, true, true);
-    //coWebsiteWorkAdventure.close();
-    WA.nav.openCoWebSite('https://jira-mon.atlassian.net/jira/software/projects/JI/boards/1?selectedIssue=JI-3', true, "", 70, 1, true, true);
-})
-///end of jira-ticket-3
-
-//menu test
-const menu = WA.ui.registerMenuCommand('menu test',
-    {
-        callback: () => {
-            WA.chat.sendChatMessage('test');
-        }
-    })
-menu.open();
-
+//fin bouton de barre d'action
 function closePopup() {
     if (currentPopup !== undefined) {
         currentPopup.close();
