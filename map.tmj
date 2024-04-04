@@ -465,13 +465,77 @@
                 {
                  "height":98.2900868200324,
                  "id":22,
-                 "name":"ticket-popup",
+                 "name":"issue-popup",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":127.485162113111,
                  "x":223.828910580272,
                  "y":220.909403050964
+                }, 
+                {
+                 "height":123.601772393292,
+                 "id":23,
+                 "name":"jiraBoard",
+                 "properties":[
+                        {
+                         "name":"focusable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"jitsiRoom",
+                         "type":"string",
+                         "value":"MeetingRoom"
+                        }, 
+                        {
+                         "name":"jitsiTrigger",
+                         "type":"string",
+                         "value":"onaction"
+                        }, 
+                        {
+                         "name":"zoom_margin",
+                         "type":"float",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":146.568399798082,
+                 "x":768.883055695777,
+                 "y":47.2910426832688
+                }, 
+                {
+                 "height":206.051941107185,
+                 "id":24,
+                 "name":"jiraPopup",
+                 "properties":[
+                        {
+                         "name":"focusable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"jitsiRoom",
+                         "type":"string",
+                         "value":"MeetingRoom"
+                        }, 
+                        {
+                         "name":"jitsiTrigger",
+                         "type":"string",
+                         "value":"onaction"
+                        }, 
+                        {
+                         "name":"zoom_margin",
+                         "type":"float",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":255.37948690336,
+                 "x":721.488561557014,
+                 "y":-0.664649110998923
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -554,7 +618,7 @@
          "y":0
         }],
  "nextlayerid":63,
- "nextobjectid":23,
+ "nextobjectid":25,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -745,6 +809,74 @@
                          "name":"name",
                          "type":"string",
                          "value":"greenTicket"
+                        }]
+                }],
+         "tilewidth":32
+        }, 
+        {
+         "columns":6,
+         "firstgid":2965,
+         "image":"tilesets\/rarity.png",
+         "imageheight":32,
+         "imagewidth":192,
+         "margin":0,
+         "name":"rarity",
+         "spacing":0,
+         "tilecount":6,
+         "tileheight":32,
+         "tiles":[
+                {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"legendaryIssue"
+                        }]
+                }, 
+                {
+                 "id":1,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"mythicIssue"
+                        }]
+                }, 
+                {
+                 "id":2,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"commonIssue"
+                        }]
+                }, 
+                {
+                 "id":3,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"uncommonIssue"
+                        }]
+                }, 
+                {
+                 "id":4,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"rareIssue"
+                        }]
+                }, 
+                {
+                 "id":5,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"epicIssue"
                         }]
                 }],
          "tilewidth":32

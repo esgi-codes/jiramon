@@ -7,7 +7,7 @@ console.log('Script started successfully');
 
 const jiraBrowseUrl = 'https://jira-mon.atlassian.net/browse/';
 const jiraAssigneeUrl = 'https://jira-mon.atlassian.net/jira/software/projects/JI/boards/1?assignee=';
-const maxInventorySize = 3;
+const maxInventorySize = 10;
 const maxInventoryMoveDelay = 5000;
 let currentPopup: any = undefined;
 
@@ -17,7 +17,7 @@ WA.onInit().then(async () => {
     console.log('Player tags: ', WA.player.tags)
 
     const userIdMap: { [key: string]: string } = {
-        'WOKA_NAME': 'JIRA_ACCOUNT_ID'
+        'adia-dev': '5f9f40bec2e5390077a882f5'
     };
 
 
@@ -50,6 +50,12 @@ WA.onInit().then(async () => {
 
     WA.room.area.onLeave('clock').subscribe(closePopup)
 
+    WA.room.area.onEnter('jiraBoard').subscribe(() => {
+        const jiraTicketsString = jiraIssues.map(issue => `[${getIssueRarity(issue).toLocaleUpperCase()}]Ticket ${issue.key} : ${issue.fields.summary} (${issue.fields.status.name})`).join('\n');
+        currentPopup = WA.ui.openPopup("jiraPopup", jiraTicketsString, []);
+    })
+
+    WA.room.area.onLeave('jiraBoard').subscribe(closePopup)
 
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
@@ -90,14 +96,16 @@ function initInventory(userId: string, jiraIssues: any): number {
 }
 
 function spawnIssues(jiraIssues: any[]) {
-    jiraIssues.forEach((ticket, index) => {
+    jiraIssues.forEach((issue, index) => {
         const randomX = Math.floor(Math.random() * 20);
         const randomY = Math.floor(Math.random() * 20);
+        const ticketRarity = getIssueRarity(issue);
+        const ticketTile = `${ticketRarity}Issue`;
         WA.room.setTiles([
             {
                 x: randomX,
                 y: randomY,
-                tile: "greenTicket",
+                tile: ticketTile,
                 layer: "furniture/furniture3"
             }
         ])
@@ -106,25 +114,32 @@ function spawnIssues(jiraIssues: any[]) {
             width: 32,
             x: randomX * 32,
             y: randomY * 32,
-            name: "ticket" + index,
+            name: "issue_" + index,
         })
 
-        WA.room.area.onEnter('ticket' + index).subscribe(() => {
+        WA.room.area.onEnter('issue_' + index).subscribe(() => {
             const triggerMessage = WA.ui.displayActionMessage({
-                message: "Appuyer espace pour s'attribuer le ticket",
+                message: `[${ticketRarity.toLocaleUpperCase()}]Ticket ${issue.key} : ${issue.fields.summary} (${issue.fields.status.name})`,
                 callback: () => {
-                    WA.nav.goToPage(jiraBrowseUrl + ticket.key);
+                    WA.nav.goToPage(jiraBrowseUrl + issue.key);
                 }
             });
             setTimeout(() => {
                 triggerMessage.remove();
             }, 3000)
-            currentPopup = WA.ui.openPopup("ticket-popup", ticket.fields.description, []);
+            currentPopup = WA.ui.openPopup("issue-popup", issue.fields.description, []);
         })
 
-        WA.room.area.onLeave('ticket' + index).subscribe(closePopup)
+        WA.room.area.onLeave('issue' + index).subscribe(closePopup)
     })
 
+}
+
+function getIssueRarity(issue: any): string {
+    if (issue.fields.customfield_10060 !== null) {
+        return issue.fields.customfield_10060.value;
+    }
+    return 'common';
 }
 
 export { };
