@@ -10,6 +10,8 @@ const jiraAssigneeUrl = 'https://jira-mon.atlassian.net/jira/software/projects/J
 const maxInventorySize = 10;
 const maxInventoryMoveDelay = 5000;
 let currentPopup: any = undefined;
+let trashPopup: any = undefined;
+let canRemoveTicket = false;
 
 // Waiting for the API to be ready
 WA.onInit().then(async () => {
@@ -57,6 +59,32 @@ WA.onInit().then(async () => {
 
     WA.room.area.onLeave('jiraBoard').subscribe(closePopup)
 
+    WA.room.area.onEnter('trash').subscribe(() => {
+        canRemoveTicket = true;
+        trashPopup = WA.ui.displayActionMessage({
+            message: 'Clique sur un ticket de ton inventaire pour le supprimer',
+            callback: () => {
+                setTimeout(() => {
+                    trashPopup.remove();
+                    trashPopup = undefined;
+                }, 3000)
+            }
+        });
+    })
+
+    WA.room.area.onLeave('trash').subscribe(() => {
+        if (trashPopup !== undefined) {
+            trashPopup.remove();
+            trashPopup = undefined;
+        }
+        canRemoveTicket = false;
+    })
+
+    WA.room.area.onLeave('jiraBoard').subscribe(() => {
+        canRemoveTicket = false;
+        closePopup();
+    })
+
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra().then(() => {
@@ -85,9 +113,20 @@ function initInventory(userId: string, jiraIssues: any): number {
                 type: 'action',
                 imageSrc: 'https://pics.clipartpng.com/midle/Red_Dice_PNG_Clip_Art-2654.png',
                 callback: (event) => {
-                    console.log('Inventory item clicked', event);
-                    // When a user clicks on the action bar button 'Register', we remove it.
-                    WA.ui.actionBar.removeButton(issue.id);
+                    if (canRemoveTicket) {
+                        // axiosInstance.post('jira/unassign', { issueId: issue.id });
+                        WA.ui.actionBar.removeButton(issue.id);
+                        inventorySize--;
+                    } else {
+                        const triggerMessage = WA.ui.displayActionMessage({
+                            message: `Rendez vous a la poubelle la plus proche pour supprimer le ticket ${issue.key}`,
+                            callback: () => {
+                            }
+                        });
+                        setTimeout(() => {
+                            triggerMessage.remove();
+                        }, 3000)
+                    }
                 }
             });
         })

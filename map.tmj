@@ -536,6 +536,23 @@
                  "width":255.37948690336,
                  "x":721.488561557014,
                  "y":-0.664649110998923
+                }, 
+                {
+                 "height":32,
+                 "id":25,
+                 "name":"trash",
+                 "properties":[
+                        {
+                         "name":"start",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":32,
+                 "x":32.7969039205788,
+                 "y":417.002411800998
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -618,7 +635,7 @@
          "y":0
         }],
  "nextlayerid":63,
- "nextobjectid":25,
+ "nextobjectid":26,
  "orientation":"orthogonal",
  "properties":[
         {
