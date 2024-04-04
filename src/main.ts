@@ -12,7 +12,7 @@ import { initPlayerStates } from "./player";
 console.log('Script started successfully');
 
 const userIdMap: UserIdMap = {
-    'WOKA_NAME': 'JIRA_ACCOUNT_ID'
+    'adia-dev': '5f9f40bec2e5390077a882f5'
 };
 
 async function initScript(): Promise<void> {
@@ -21,8 +21,6 @@ async function initScript(): Promise<void> {
         console.log(`Player tags: ${WA.player.tags.join(', ')}`);
 
         initPlayerStates();
-
-        console.log('State:', WA.player.state);
 
         const jiraIssues: JiraIssue[] = (await axiosInstance.get<JiraIssue[]>('jira/issues')).data;
         spawnIssues(jiraIssues);
@@ -43,9 +41,9 @@ function handleInventory(jiraIssues: JiraIssue[]): void {
 
 function handleAreas(jiraIssues: JiraIssue[]): void {
     WA.room.area.onEnter('clock').subscribe(displayCurrentTime);
-    WA.room.area.onLeave('clock').subscribe(closePopup);
+    WA.room.area.onLeave('clock').subscribe(() => closePopup(WA.player.state.currentTimePopup));
     WA.room.area.onEnter('jiraBoard').subscribe(() => displayJiraBoard(jiraIssues));
-    WA.room.area.onLeave('jiraBoard').subscribe(closePopup);
+    WA.room.area.onLeave('jiraBoard').subscribe(() => closePopup(WA.player.state.jiraBoardPopup));
     WA.room.area.onEnter('trash').subscribe(enableTicketDeletion);
     WA.room.area.onLeave('trash').subscribe(disableTicketDeletion);
 }

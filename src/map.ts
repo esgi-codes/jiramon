@@ -2,6 +2,12 @@ import { closePopup, getIssueRarity } from "./utils";
 
 const JIRA_BROWSE_URL = 'https://jira-mon.atlassian.net/browse/';
 
+function initMapStates() {
+    WA.state.userIdMap = {
+        'adia-dev': '5f9f40bec2e5390077a882f5'
+    };
+}
+
 function spawnIssues(jiraIssues: any[]) {
     jiraIssues.forEach((issue, index) => {
         const randomX = Math.floor(Math.random() * 20);

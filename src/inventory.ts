@@ -1,8 +1,9 @@
 // src/inventory.ts
 
+import axiosInstance from "./axiosInstance";
 import { JiraIssue } from "./types";
 
-const MAX_INVENTORY_SIZE = 10;
+const MAX_INVENTORY_SIZE = 2;
 const MAX_INVENTORY_MOVE_DELAY = 5000;
 const JIRA_ASSIGNEE_URL = 'https://jira-mon.atlassian.net/jira/software/projects/JI/boards/1?assignee=';
 
@@ -49,9 +50,9 @@ function addToInventory(issue: JiraIssue): void {
 /**
  * Removes a Jira issue from the inventory.
  */
-function removeIssueFromInventory(issueId: string): void {
+async function removeIssueFromInventory(issueId: string): Promise<void> {
     // Example call to potentially unassign the issue via API
-    // axiosInstance.post('jira/unassign', { issueId: issueId });
+    const response = await axiosInstance.post('jira/unassign', { issueId: issueId });
     WA.ui.actionBar.removeButton(issueId);
     WA.player.state.inventorySize -= 1;
 }
@@ -63,7 +64,12 @@ function enforceInventoryLimits(): void {
     if (WA.player.state.inventorySize >= MAX_INVENTORY_SIZE) {
         WA.controls.disablePlayerControls();
         const message = `You have too many tickets. You cannot move for a few seconds... Use this time to address them! (Press space to open Jira) ${WA.player.name}`;
-        const triggerMessage = WA.ui.displayActionMessage({ message, callback: () => WA.nav.goToPage(JIRA_ASSIGNEE_URL + userIdMap[WA.player.name]) });
+        const triggerMessage = WA.ui.displayActionMessage({
+            message,
+            callback: () => {
+                WA.nav.goToPage(JIRA_ASSIGNEE_URL + WA.player.state.jiraAccountId);
+            }
+        });
 
         setTimeout(() => {
             triggerMessage.remove();

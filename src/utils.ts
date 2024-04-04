@@ -7,7 +7,7 @@ import { JiraIssue } from "./types";
 export function displayCurrentTime(): void {
     const now = new Date();
     const timeStr = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
-    WA.player.state.currentPopup = WA.ui.openPopup("clockPopup", `It's ${timeStr}`, []);
+    WA.player.state.currentTimePopup = WA.ui.openPopup("clockPopup", `It's ${timeStr}`, []);
 }
 
 /**
@@ -15,7 +15,7 @@ export function displayCurrentTime(): void {
  */
 export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
     const issuesString = jiraIssues.map(issue => formatIssueString(issue)).join('\n');
-    WA.player.state.currentPopup = WA.ui.openPopup("jiraPopup", issuesString, []);
+    WA.player.state.jiraBoardPopup = WA.ui.openPopup("jiraPopup", issuesString, []);
 }
 
 /**
