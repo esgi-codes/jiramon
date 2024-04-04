@@ -9,7 +9,7 @@ let currentPopup: any = undefined;
 // Waiting for the API to be ready
 WA.onInit().then(() => {
     console.log('Scripting API ready');
-    console.log('Player tags: ',WA.player.tags)
+    console.log('Player tags: ', WA.player.tags)
 
     WA.room.area.onEnter('clock').subscribe(() => {
         const today = new Date();
@@ -20,10 +20,23 @@ WA.onInit().then(() => {
     WA.room.area.onLeave('clock').subscribe(closePopup)
 
     WA.room.area.onEnter('ticket1').subscribe(() => {
-        const title = "ching chong yeux plssé ";
-        currentPopup= WA.ui.openPopup("ticket-popup", title, []);
+        currentPopup = WA.ui.openPopup("ticket-popup", "Loading...", []);
+
+        fetch("http://localhost:3000/jira", {
+            method: "GET"
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((text) => {
+                const jiraTicket = JSON.parse(text);
+                closePopup();
+                currentPopup = WA.ui.openPopup("ticket-popup", jiraTicket.issueTypes[0].description, []);
+            })
+            .catch((err) => console.error(err));
+
     })
-    WA.room.area.onLeave('ticket').subscribe(closePopup)
+    WA.room.area.onLeave('ticket1').subscribe(closePopup)
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra().then(() => {
@@ -32,11 +45,11 @@ WA.onInit().then(() => {
 
 }).catch(e => console.error(e));
 
-function closePopup(){
+function closePopup() {
     if (currentPopup !== undefined) {
         currentPopup.close();
         currentPopup = undefined;
     }
 }
 
-export {};
+export { };
