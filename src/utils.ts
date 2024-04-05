@@ -14,31 +14,53 @@ export function displayCurrentTime(): void {
  * Displays Jira issues on the board area.
  */
 export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
-    const issuesString = jiraIssues.map(issue => formatIssueString(issue)).join('\n');
-    const issuesMessages = jiraIssues.map((issue, index) => {
-        return {
-            index,
-            message: formatIssueString(issue),
-            callback: () => WA.nav.goToPage(`https://jira-mon.atlassian.net/browse/${issue.key}`)
-        };
-    });
+    let currentIndex = 0; // Ajoutez cette ligne pour suivre l'indice actuel
 
-    WA.player.state.jiraBoardPopup = WA.ui.openPopup("jiraPopup", issuesMessages[0].message, [
-        {
-            label: 'Close',
-            callback: () => WA.player.state.jiraBoardPopup.close()
-        },
-        {
-            label: 'Next',
-            callback: () => {
-                const currentMessage = issuesMessages.shift();
-                issuesMessages.push(currentMessage);
-
-                WA.player.state.jiraBoardPopup.close();
+    const updatePopupContent = () => {
+        const issue = jiraIssues[currentIndex];
+        WA.player.state.jiraBoardPopup =
+        WA.ui.openPopup("jiraPopup", formatIssueString(issue), [
+           /* {
+                label: 'Close',
+                callback: () => WA.player.state.jiraBoardPopup.close()
+            },*/
+            {
+                label: 'Back',
+                className: '',
+                callback: () => {
+                    currentIndex = (currentIndex - 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
+                    WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
+                    if (currentIndex < 0) {
+                        WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
+                    } // Assure que l'indice reste positif (boucle à la fin de la liste
+                    updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
+                    console.log('Back issue: ', issue.key);
+                }
+            },
+            {
+                label: 'Next',
+                callback: () => {
+                    currentIndex = (currentIndex + 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
+                    WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
+                    updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
+                    console.log('Next issue: ', issue.key);
+                }
+            },
+            {
+                label: 'Go to Jira ticket',
+                callback: () => {
+                    const issue = jiraIssues[currentIndex];
+                    const url = `https://jira-mon.atlassian.net/browse/${issue.key}`;
+                    WA.nav.goToPage(url); // Redirige l'utilisateur vers le ticket Jira
+                }
             }
-        }
-    ]);
+
+        ]);
+    };
+
+    updatePopupContent(); // Appelle cette fonction pour fie ppete le premier popup
 }
+
 
 /**
  * Formats a single Jira issue into a readable string.
