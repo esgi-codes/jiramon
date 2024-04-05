@@ -82,11 +82,13 @@ function addToInventory(issue: JiraIssue): void {
  * Removes a Jira issue from the inventory.
  */
 async function removeIssueFromInventory(issueId: string): Promise<void> {
+    const thrashSound = WA.sound.loadSound("sounds/trash.mp3");
+
     // Example call to potentially unassign the issue via API
     if (!(await unassignIssue(issueId, WA.player.state.jiraAccountId as string))) {
         return;
     }
-
+    thrashSound.play({});
     WA.ui.actionBar.removeButton(issueId);
     WA.player.state.inventorySize = Math.max(0, (WA.player.state.inventorySize as number) - 1);
 }
