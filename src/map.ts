@@ -27,7 +27,7 @@ async function spawnIssues(jiraIssues: any[]) {
 
     jiraIssues
         .filter(issue => !["DONE"].includes(issue.fields.status.name))
-        .forEach((issue, index) => {
+        .forEach((issue, _index) => {
             const coordinates = getRandomCoordinate(collisionsLayer.data, collisionsLayer.width, collisionsLayer.height);
             const [randomX, randomY] = coordinates as [number, number];
 

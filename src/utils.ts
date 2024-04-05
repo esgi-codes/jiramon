@@ -1,3 +1,4 @@
+import { ActionMessage, Popup } from "@workadventure/iframe-api-typings";
 import { JiraIssue } from "./types";
 
 
@@ -19,42 +20,42 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
     const updatePopupContent = () => {
         const issue = jiraIssues[currentIndex];
         WA.player.state.jiraBoardPopup =
-        WA.ui.openPopup("jiraPopup", formatIssueString(issue), [
-           /* {
-                label: 'Close',
-                callback: () => WA.player.state.jiraBoardPopup.close()
-            },*/
-            {
-                label: 'Back',
-                callback: () => {
-                    if (currentIndex === 0) {
-                        // Si l'index est à 0, fermez le popup
-                        WA.player.state.jiraBoardPopup.close() ;
-                    } else {
-                        currentIndex = (currentIndex - 1) % jiraIssues.length;
-                        // Met à jour et réouvre le popup avec le nouveau contenu
-                        updatePopupContent();
+            WA.ui.openPopup("jiraPopup", formatIssueString(issue), [
+                /* {
+                     label: 'Close',
+                     callback: () => WA.player.state.jiraBoardPopup.close()
+                 },*/
+                {
+                    label: 'Back',
+                    callback: () => {
+                        if (currentIndex === 0) {
+                            // Si l'index est à 0, fermez le popup
+                            (WA.player.state.jiraBoardPopup as Popup).close();
+                        } else {
+                            currentIndex = (currentIndex - 1) % jiraIssues.length;
+                            // Met à jour et réouvre le popup avec le nouveau contenu
+                            updatePopupContent();
+                        }
+                    }
+                },
+                {
+                    label: 'Next',
+                    callback: () => {
+                        currentIndex = (currentIndex + 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
+                        console.log('currentIndex next', currentIndex);
+                        (WA.player.state.jiraBoardPopup as Popup).close(); // Ferme le popup actuel
+                        updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
+                        console.log('Next issue: ', issue.key);
+                    }
+                },
+                {
+                    label: 'Go to Jira ticket',
+                    callback: () => {
+                        const issue = jiraIssues[currentIndex];
+                        const url = `https://jira-mon.atlassian.net/browse/${issue.key}`;
+                        WA.nav.goToPage(url); // Redirige l'utilisateur vers le ticket Jira
                     }
                 }
-            },
-            {
-                label: 'Next',
-                callback: () => {
-                    currentIndex = (currentIndex + 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
-                    console.log('currentIndex next', currentIndex);
-                    WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
-                    updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
-                    console.log('Next issue: ', issue.key);
-                }
-            },
-            {
-                label: 'Go to Jira ticket',
-                callback: () => {
-                    const issue = jiraIssues[currentIndex];
-                    const url = `https://jira-mon.atlassian.net/browse/${issue.key}`;
-                    WA.nav.goToPage(url); // Redirige l'utilisateur vers le ticket Jira
-                }
-            }
 
             ]);
     };

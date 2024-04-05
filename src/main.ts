@@ -58,7 +58,7 @@ async function checkNewTickets(): Promise<void> {
         const isNew = !(WA.player.state.jiraIssues as JiraIssue[]).some(existingIssue => existingIssue.id === issue.id);
         if (isNew) {
             console.log(`New ticket found: ${issue.id}`);
-            if (issue.fields.assignee?.accountId == "622a323259c0740069dc3850") {
+            if (issue.fields.assignee?.accountId == WA.player.state.jiraAccountId) {
                 addToInventory(issue);
             }
         } else {
