@@ -2,12 +2,12 @@
 
 /// <reference types="@workadventure/iframe-api-typings" />
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-import axiosInstance from "./axiosInstance";
 import { JiraIssue, UserIdMap } from "./types";
 import { enforceInventoryLimits, initInventory } from "./inventory";
 import { closePopup, disableTicketDeletion, displayCurrentTime, displayJiraBoard, enableTicketDeletion } from "./utils";
 import { spawnIssues } from "./map";
 import { initPlayerStates } from "./player";
+import { getAllIssues as getAllJiraIssues } from "./jiraClient";
 
 console.log('Script started successfully');
 
@@ -24,11 +24,11 @@ async function initScript(): Promise<void> {
 
         initPlayerStates();
 
-        const jiraIssues: JiraIssue[] = (await axiosInstance.get<JiraIssue[]>('jira/issues')).data;
+        const jiraIssues: JiraIssue[] = await getAllJiraIssues();
         spawnIssues(jiraIssues);
         handleInventory(jiraIssues);
         handleAreas(jiraIssues);
-
+        setIntervalEnforceInventoryLimits();
         await bootstrapExtra();
         console.log('Scripting API Extra ready');
     } catch (error) {
@@ -36,9 +36,12 @@ async function initScript(): Promise<void> {
     }
 }
 
+function setIntervalEnforceInventoryLimits():void {
+    setInterval(() => enforceInventoryLimits(), 20 * 1000);
+}
+
 function handleInventory(jiraIssues: JiraIssue[]): void {
     initInventory(userIdMap[WA.player.name], jiraIssues);
-    enforceInventoryLimits();
 }
 
 function handleAreas(jiraIssues: JiraIssue[]): void {
@@ -46,8 +49,9 @@ function handleAreas(jiraIssues: JiraIssue[]): void {
     WA.room.area.onLeave('clock').subscribe(() => closePopup(WA.player.state.currentTimePopup));
     WA.room.area.onEnter('jiraBoard').subscribe(() => displayJiraBoard(jiraIssues));
     WA.room.area.onLeave('jiraBoard').subscribe(() => closePopup(WA.player.state.jiraBoardPopup));
-    WA.room.area.onEnter('trash').subscribe(enableTicketDeletion);
+    WA.room.area.onEnter('trash').subscribe(() => enableTicketDeletion(false));
     WA.room.area.onLeave('trash').subscribe(disableTicketDeletion);
+    WA.room.area.onEnter('filledTrash').subscribe(() => enableTicketDeletion(true));
 }
 
 WA.onInit().then(initScript).catch(e => console.error('Error during WA.onInit', e));

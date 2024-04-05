@@ -1,6 +1,4 @@
-// src/inventory.ts
-
-import axiosInstance from "./axiosInstance";
+import { unassignIssue } from "./jiraClient";
 import { JiraIssue } from "./types";
 
 const MAX_INVENTORY_SIZE = 2;
@@ -14,7 +12,7 @@ function initInventory(userId: string, jiraIssues: JiraIssue[]) {
     WA.player.state.saveVariable('inventorySize', 0);
     console.log('Initializing inventory for user', userId);
     jiraIssues
-    .filter(issue => issue.fields.assignee?.accountId === userId && !["DONE", "BACKLOG"].includes(issue.fields.status.name))
+        .filter(issue => issue.fields.assignee?.accountId === userId && !["DONE", "BACKLOG"].includes(issue.fields.status.name))
         .forEach(issue => addToInventory(issue));
 
 }
@@ -23,7 +21,7 @@ function initInventory(userId: string, jiraIssues: JiraIssue[]) {
  * Adds a Jira issue to the inventory and sets up an action button for it.
 */
 function addToInventory(issue: JiraIssue): void {
-    WA.player.state.inventorySize += 1;
+    WA.player.state.inventorySize = (WA.player.state.inventorySize as number) + 1;
 
     WA.ui.actionBar.addButton({
         id: issue.id,
@@ -52,20 +50,19 @@ function addToInventory(issue: JiraIssue): void {
  */
 async function removeIssueFromInventory(issueId: string): Promise<void> {
     // Example call to potentially unassign the issue via API
-    const response = await axiosInstance.post('jira/issues/unassign', { issueId: issueId });
-    if (response.status !== 204) {
-        console.error('Failed to unassign issue', issueId);
+    if (!(await unassignIssue(issueId, WA.player.state.jiraAccountId as string))) {
         return;
     }
+
     WA.ui.actionBar.removeButton(issueId);
-    WA.player.state.inventorySize -= 1;
+    WA.player.state.inventorySize = Math.max(0, (WA.player.state.inventorySize as number) - 1);
 }
 
 /**
  * Enforces inventory limits and applies consequences if exceeded.
  */
 function enforceInventoryLimits(): void {
-    if (WA.player.state.inventorySize >= MAX_INVENTORY_SIZE) {
+    if ((WA.player.state.inventorySize as number) >= MAX_INVENTORY_SIZE) {
         WA.controls.disablePlayerControls();
         const message = `You have too many tickets. You cannot move for a few seconds... Use this time to address them! (Press space to open Jira) ${WA.player.name}`;
         const triggerMessage = WA.ui.displayActionMessage({

@@ -61,7 +61,6 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
     updatePopupContent(); // Appelle cette fonction pour fie ppete le premier popup
 }
 
-
 /**
  * Formats a single Jira issue into a readable string.
  */
@@ -72,7 +71,20 @@ export function formatIssueString(issue: JiraIssue): string {
 /**
  * Enables the ability to delete a ticket from the inventory.
  */
-export function enableTicketDeletion(): void {
+export function enableTicketDeletion(filled: boolean | undefined): void {
+    if (filled) {
+        WA.player.state.trashActionMessage = WA.ui.displayActionMessage({
+            message: 'This trash can is already full, you cannot delete any more tickets, go to another trash can!',
+            callback: () => { },
+        });
+
+        setTimeout(() => {
+            (WA.player.state.trashActionMessage as ActionMessage).remove();
+            WA.player.state.trashActionMessage = undefined;
+        }, 5000);
+
+        return;
+    }
     WA.player.state.canRemoveTicket = true;
     if (WA.player.state.inventorySize === 0) {
         WA.player.state.trashActionMessage = WA.ui.displayActionMessage({
@@ -87,7 +99,7 @@ export function enableTicketDeletion(): void {
     }
 
     setTimeout(() => {
-        WA.player.state.trashActionMessage.remove();
+        (WA.player.state.trashActionMessage as ActionMessage).remove();
         WA.player.state.trashActionMessage = undefined;
     }, 5000);
 }
@@ -98,7 +110,7 @@ export function enableTicketDeletion(): void {
 export function disableTicketDeletion(): void {
     WA.player.state.canRemoveTicket = false;
     if (WA.player.state.trashActionMessage !== undefined) {
-        WA.player.state.trashActionMessage.remove();
+        (WA.player.state.trashActionMessage as ActionMessage).remove();
         WA.player.state.trashActionMessage = undefined;
     }
 }
@@ -111,7 +123,7 @@ export function closePopup(popup: any = undefined): void {
         popup.close();
         popup = undefined;
     } else if (WA.player.state.currentPopup !== undefined) {
-        WA.player.state.currentPopup.close();
+        (WA.player.state.currentPopup as Popup).close();
         WA.player.state.currentPopup = undefined;
     }
 }

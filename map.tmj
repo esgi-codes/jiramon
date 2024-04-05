@@ -553,6 +553,23 @@
                  "width":32,
                  "x":32.7969039205788,
                  "y":417.002411800998
+                }, 
+                {
+                 "height":49.9482864995232,
+                 "id":26,
+                 "name":"filledTrash",
+                 "properties":[
+                        {
+                         "name":"start",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"area",
+                 "visible":true,
+                 "width":64.5312692803858,
+                 "x":654.817207919681,
+                 "y":396.249705535925
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -635,7 +652,7 @@
          "y":0
         }],
  "nextlayerid":63,
- "nextobjectid":26,
+ "nextobjectid":27,
  "orientation":"orthogonal",
  "properties":[
         {
