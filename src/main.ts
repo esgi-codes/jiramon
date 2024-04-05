@@ -46,8 +46,9 @@ function handleAreas(jiraIssues: JiraIssue[]): void {
     WA.room.area.onLeave('clock').subscribe(() => closePopup(WA.player.state.currentTimePopup));
     WA.room.area.onEnter('jiraBoard').subscribe(() => displayJiraBoard(jiraIssues));
     WA.room.area.onLeave('jiraBoard').subscribe(() => closePopup(WA.player.state.jiraBoardPopup));
-    WA.room.area.onEnter('trash').subscribe(enableTicketDeletion);
+    WA.room.area.onEnter('trash').subscribe(() => enableTicketDeletion(false));
     WA.room.area.onLeave('trash').subscribe(disableTicketDeletion);
+    WA.room.area.onEnter('filledTrash').subscribe(() => enableTicketDeletion(true));
 }
 
 WA.onInit().then(initScript).catch(e => console.error('Error during WA.onInit', e));

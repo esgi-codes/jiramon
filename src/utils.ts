@@ -50,7 +50,20 @@ export function formatIssueString(issue: JiraIssue): string {
 /**
  * Enables the ability to delete a ticket from the inventory.
  */
-export function enableTicketDeletion(): void {
+export function enableTicketDeletion(filled: boolean | undefined): void {
+    if (filled) {
+        WA.player.state.trashActionMessage = WA.ui.displayActionMessage({
+            message: 'This trash can is already full, you cannot delete any more tickets, go to another trash can!',
+            callback: () => { },
+        });
+
+        setTimeout(() => {
+            WA.player.state.trashActionMessage.remove();
+            WA.player.state.trashActionMessage = undefined;
+        }, 5000);
+
+        return;
+    }
     WA.player.state.canRemoveTicket = true;
     if (WA.player.state.inventorySize === 0) {
         WA.player.state.trashActionMessage = WA.ui.displayActionMessage({
