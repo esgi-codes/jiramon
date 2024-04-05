@@ -7,7 +7,7 @@ async function getAllIssues(): Promise<JiraIssue[]> {
 }
 
 async function unassignIssue(issueId: string, assignee: string): Promise<boolean> {
-    const response = await axiosInstance.post('jira/issues/unassign', { issueId: issueId });
+    const response = await axiosInstance.post('jira/issues/unassign', { issueId });
     if (response.status !== 204) {
         console.error('Failed to unassign issue', issueId);
         return false;
@@ -17,4 +17,15 @@ async function unassignIssue(issueId: string, assignee: string): Promise<boolean
     return true;
 }
 
-export { getAllIssues, unassignIssue };
+async function assignIssue(issueId: string, assignee: string): Promise<boolean> {
+    const response = await axiosInstance.post('jira/issues/assign', { issueId, assignee });
+    if (response.status !== 204) {
+        console.error('Failed to unassign issue', issueId);
+        return false;
+    }
+
+    console.log(`Successfully unassigned issue ${issueId} from ${assignee}`);
+    return true;
+}
+
+export { getAllIssues, unassignIssue, assignIssue };

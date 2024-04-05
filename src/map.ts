@@ -1,3 +1,4 @@
+import { assignIssue } from "./jiraClient";
 import { closePopup, getIssueRarity } from "./utils";
 
 const JIRA_BROWSE_URL = 'https://jira-mon.atlassian.net/browse/';
@@ -55,6 +56,7 @@ async function spawnIssues(jiraIssues: any[]) {
                     toolTip: issue.fields.summary,
                     callback: () => {
                         console.log('Assigning issue', issue.key);
+                        assignIssue(issue.key, WA.player.state.jiraAccountId as string);
                     },
                 });
 
