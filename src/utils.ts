@@ -14,7 +14,7 @@ export function displayCurrentTime(): void {
  * Displays Jira issues on the board area.
  */
 export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
-    let currentIndex = 0; // Ajoutez cette ligne pour suivre l'indice actuel
+    let currentIndex = 0;
 
     const updatePopupContent = () => {
         const issue = jiraIssues[currentIndex];
@@ -56,7 +56,7 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
                 }
             }
 
-        ]);
+            ]);
     };
 
     updatePopupContent(); // Appelle cette fonction pour fie ppete le premier popup

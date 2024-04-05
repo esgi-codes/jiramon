@@ -3,7 +3,7 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
 import { JiraIssue, UserIdMap } from "./types";
-import { enforceInventoryLimits, initInventory } from "./inventory";
+import { addToInventory, enforceInventoryLimits, initInventory } from "./inventory";
 import { closePopup, disableTicketDeletion, displayCurrentTime, displayJiraBoard, enableTicketDeletion } from "./utils";
 import { spawnIssues } from "./map";
 import { initPlayerStates } from "./player";
@@ -17,18 +17,22 @@ const userIdMap: UserIdMap = {
     'pascal': '622a323259c0740069dc3850',
 };
 
+
 async function initScript(): Promise<void> {
     try {
         console.log('Scripting API ready');
         console.log(`Player tags: ${WA.player.tags.join(', ')}`);
-
+        
         initPlayerStates();
+        WA.player.state.saveVariable("ticketsCount", 0);
 
-        const jiraIssues: JiraIssue[] = await getAllJiraIssues();
-        spawnIssues(jiraIssues);
-        handleInventory(jiraIssues);
-        handleAreas(jiraIssues);
+        WA.player.state.saveVariable("jiraIssues", await getAllJiraIssues());
+        spawnIssues(WA.player.state.jiraIssues);
+        handleInventory(WA.player.state.jiraIssues);
+        handleAreas(WA.player.state.jiraIssues);
         setIntervalEnforceInventoryLimits();
+        setIntervalSpawnNewTickets();
+
         await bootstrapExtra();
         console.log('Scripting API Extra ready');
     } catch (error) {
@@ -36,9 +40,37 @@ async function initScript(): Promise<void> {
     }
 }
 
-function setIntervalEnforceInventoryLimits():void {
+function setIntervalEnforceInventoryLimits(): void {
     setInterval(() => enforceInventoryLimits(), 20 * 1000);
 }
+
+function setIntervalSpawnNewTickets():void{
+    setInterval(()=> checkNewTickets(),10 *1000 )
+}
+
+async function checkNewTickets(): Promise<void> {
+    // Get all Jira issues
+    const allJiraIssues: JiraIssue[] = await getAllJiraIssues();
+
+    // Filter out new tickets
+    const newTickets: JiraIssue[] = allJiraIssues.filter(issue => {
+        // Check if the issue is not present in the jiraIssues array
+        const isNew = !WA.player.state.jiraIssues.some(existingIssue => existingIssue.id === issue.id);
+        if (isNew) {
+            console.log(`New ticket found: ${issue.id}`);
+            if (issue.fields.assignee?.accountId == "622a323259c0740069dc3850"){
+                addToInventory(issue);
+            }
+        } else {
+            console.log(`Ticket ${issue.id} is already in the list.`);
+        }
+        return isNew;
+    });
+    spawnIssues(newTickets);
+
+    WA.player.state.jiraIssues = WA.player.state.jiraIssues.concat(newTickets);
+}
+
 
 function handleInventory(jiraIssues: JiraIssue[]): void {
     initInventory(userIdMap[WA.player.name], jiraIssues);
