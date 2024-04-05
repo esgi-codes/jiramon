@@ -26,21 +26,22 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
             },*/
             {
                 label: 'Back',
-                className: '',
                 callback: () => {
-                    currentIndex = (currentIndex - 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
-                    WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
-                    if (currentIndex < 0) {
-                        WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
-                    } // Assure que l'indice reste positif (boucle à la fin de la liste
-                    updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
-                    console.log('Back issue: ', issue.key);
+                    if (currentIndex === 0) {
+                        // Si l'index est à 0, fermez le popup
+                        WA.player.state.jiraBoardPopup.close() ;
+                    } else {
+                        currentIndex = (currentIndex - 1) % jiraIssues.length;
+                        // Met à jour et réouvre le popup avec le nouveau contenu
+                        updatePopupContent();
+                    }
                 }
             },
             {
                 label: 'Next',
                 callback: () => {
                     currentIndex = (currentIndex + 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
+                    console.log('currentIndex next', currentIndex);
                     WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
                     updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
                     console.log('Next issue: ', issue.key);
