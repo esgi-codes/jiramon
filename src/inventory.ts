@@ -47,6 +47,10 @@ function addToInventory(issue: JiraIssue): void {
         {
             'name': 'mythic',
             'imageSrc': 'https://lh3.googleusercontent.com/d/1QrGVa0Vr_RLKTFs2g_4RBLe5XA_TKPAP=w1000?authuser=0'
+        },
+        {
+            'name': 'shiny',
+            'imageSrc': 'https://lh3.googleusercontent.com/d/1tktcnrdPmHVO48Q70hXXsaQJA-yMb3Nb=w1000?authuser=0'
         }
     ]
 
