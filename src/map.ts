@@ -29,10 +29,11 @@ async function spawnIssues(jiraIssues: any[]) {
         .filter(issue => !["DONE"].includes(issue.fields.status.name))
         .forEach((issue, index) => {
             const coordinates = getRandomCoordinate(collisionsLayer.data, collisionsLayer.width, collisionsLayer.height);
-            const randomX = coordinates[0];
-            const randomY = coordinates[1];
+            const [randomX, randomY] = coordinates as [number, number];
 
-            WA.player.state.ticketsCount += 1;
+            (WA.player.state.issuesOnTheFloor as Map<string, any>).set(issue.id, { x: randomX, y: randomY });
+            WA.player.state.ticketsCount = (WA.player.state.ticketsCount as number) + 1;
+
             const ticketsCount = WA.player.state.loadVariable("ticketsCount");
             const ticketRarity = getIssueRarity(issue);
             const ticketTile = `${ticketRarity}Issue`;
@@ -41,7 +42,7 @@ async function spawnIssues(jiraIssues: any[]) {
                     x: randomX,
                     y: randomY,
                     tile: ticketTile,
-                    layer: "furniture/furniture3"
+                    layer: "above/above2"
                 }
             ])
             WA.room.area.create({
@@ -62,6 +63,23 @@ async function spawnIssues(jiraIssues: any[]) {
                     },
                 });
 
+                WA.ui.actionBar.addButton({
+                    id: 'locate_issue_' + ticketsCount,
+                    label: `Locate ${issue.key}`,
+                    toolTip: issue.fields.summary,
+                    callback: () => {
+                        const issueCoordinates = (WA.player.state.issuesOnTheFloor as Map<string, any>).get(issue.id);
+                        WA.camera.set(
+                            issueCoordinates.x * 32,
+                            issueCoordinates.y * 32,
+                            64,
+                            64,
+                            false,
+                            true
+                        );
+                    },
+                });
+
 
                 const triggerMessage = WA.ui.displayActionMessage({
                     message: `[${ticketRarity.toLocaleUpperCase()}]Ticket ${issue.key} : ${issue.fields.summary} (${issue.fields.status.name})`,
@@ -76,6 +94,7 @@ async function spawnIssues(jiraIssues: any[]) {
             })
             WA.room.area.onLeave('issue_' + ticketsCount).subscribe(() => {
                 WA.ui.actionBar.removeButton('assign_issue_' + ticketsCount);
+                WA.ui.actionBar.removeButton('locate_issue_' + ticketsCount);
                 closePopup()
             })
         })

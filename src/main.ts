@@ -27,9 +27,9 @@ async function initScript(): Promise<void> {
         WA.player.state.saveVariable("ticketsCount", 0);
 
         WA.player.state.saveVariable("jiraIssues", await getAllJiraIssues());
-        spawnIssues(WA.player.state.jiraIssues);
-        handleInventory(WA.player.state.jiraIssues);
-        handleAreas(WA.player.state.jiraIssues);
+        spawnIssues(WA.player.state.jiraIssues as JiraIssue[]);
+        handleInventory(WA.player.state.jiraIssues as JiraIssue[]);
+        handleAreas(WA.player.state.jiraIssues as JiraIssue[]);
         setIntervalEnforceInventoryLimits();
         setIntervalSpawnNewTickets();
 
@@ -55,7 +55,7 @@ async function checkNewTickets(): Promise<void> {
     // Filter out new tickets
     const newTickets: JiraIssue[] = allJiraIssues.filter(issue => {
         // Check if the issue is not present in the jiraIssues array
-        const isNew = !WA.player.state.jiraIssues.some(existingIssue => existingIssue.id === issue.id);
+        const isNew = !(WA.player.state.jiraIssues as JiraIssue[]).some(existingIssue => existingIssue.id === issue.id);
         if (isNew) {
             console.log(`New ticket found: ${issue.id}`);
             if (issue.fields.assignee?.accountId == "622a323259c0740069dc3850") {
@@ -68,7 +68,7 @@ async function checkNewTickets(): Promise<void> {
     });
     spawnIssues(newTickets);
 
-    WA.player.state.jiraIssues = WA.player.state.jiraIssues.concat(newTickets);
+    WA.player.state.jiraIssues = (WA.player.state.jiraIssues as JiraIssue[]).concat(newTickets);
 }
 
 

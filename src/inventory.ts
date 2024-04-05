@@ -63,8 +63,18 @@ function addToInventory(issue: JiraIssue): void {
         imageSrc: rarity?.imageSrc ?? 'https://lh3.googleusercontent.com/d/1m2ytC5Ie4l_1Kp-Tqu8aIn973j0DzAJX=w1000?authuser=0',
         callback: () => {
             if (WA.player.state.canRemoveTicket) {
+
                 removeIssueFromInventory(issue.id);
             } else {
+                const issueCoordinates = (WA.player.state.issuesOnTheFloor as Map<string, any>).get(issue.id);
+                WA.camera.set(
+                    issueCoordinates.x * 32,
+                    issueCoordinates.y * 32,
+                    64,
+                    64,
+                    false,
+                    true
+                );
                 const goToNearestTrashActionMessage = WA.ui.displayActionMessage({
                     message: `Go to the nearest trash to delete ticket ${issue.key}`,
                     callback: () => { },
