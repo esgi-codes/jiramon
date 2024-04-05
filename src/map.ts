@@ -27,11 +27,10 @@ async function spawnIssues(jiraIssues: any[]) {
 
 
     jiraIssues
-        .filter(issue =>  !["DONE"].includes(issue.fields.status.name))
+        .filter(issue => !["DONE"].includes(issue.fields.status.name))
         .forEach((issue, index) => {
-        const coordinates= getRandomCoordinate(collisionsLayer.data, collisionsLayer.width, collisionsLayer.height);
-        const randomX = coordinates[0];
-        const randomY = coordinates[1];
+            const coordinates = getRandomCoordinate(collisionsLayer.data, collisionsLayer.width, collisionsLayer.height);
+            const [randomX, randomY] = coordinates as [number, number];
             const ticketRarity = getIssueRarity(issue);
             const ticketTile = `${ticketRarity}Issue`;
             WA.room.setTiles([

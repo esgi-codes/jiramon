@@ -1,3 +1,4 @@
+import { ActionMessage, Popup } from "@workadventure/iframe-api-typings";
 import { JiraIssue } from "./types";
 
 
@@ -19,43 +20,42 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
     const updatePopupContent = () => {
         const issue = jiraIssues[currentIndex];
         WA.player.state.jiraBoardPopup =
-        WA.ui.openPopup("jiraPopup", formatIssueString(issue), [
-           /* {
-                label: 'Close',
-                callback: () => WA.player.state.jiraBoardPopup.close()
-            },*/
-            {
-                label: 'Back',
-                className: '',
-                callback: () => {
-                    currentIndex = (currentIndex - 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
-                    WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
-                    if (currentIndex < 0) {
-                        WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
-                    } // Assure que l'indice reste positif (boucle à la fin de la liste
-                    updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
-                    console.log('Back issue: ', issue.key);
+            WA.ui.openPopup("jiraPopup", formatIssueString(issue), [
+                /* {
+                     label: 'Close',
+                     callback: () => WA.player.state.jiraBoardPopup.close()
+                 },*/
+                {
+                    label: 'Back',
+                    callback: () => {
+                        currentIndex = (currentIndex - 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
+                        (WA.player.state.jiraBoardPopup as Popup).close(); // Ferme le popup actuel
+                        if (currentIndex < 0) {
+                            (WA.player.state.jiraBoardPopup as Popup).close(); // Ferme le popup actuel
+                        } // Assure que l'indice reste positif (boucle à la fin de la liste
+                        updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
+                        console.log('Back issue: ', issue.key);
+                    }
+                },
+                {
+                    label: 'Next',
+                    callback: () => {
+                        currentIndex = (currentIndex + 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
+                        (WA.player.state.jiraBoardPopup as Popup).close(); // Ferme le popup actuel
+                        updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
+                        console.log('Next issue: ', issue.key);
+                    }
+                },
+                {
+                    label: 'Go to Jira ticket',
+                    callback: () => {
+                        const issue = jiraIssues[currentIndex];
+                        const url = `https://jira-mon.atlassian.net/browse/${issue.key}`;
+                        WA.nav.openTab(url); // Redirige l'utilisateur vers le ticket Jira
+                    }
                 }
-            },
-            {
-                label: 'Next',
-                callback: () => {
-                    currentIndex = (currentIndex + 1) % jiraIssues.length; // Incrémente l'indice et boucle si nécessaire
-                    WA.player.state.jiraBoardPopup.close(); // Ferme le popup actuel
-                    updatePopupContent(); // Met à jour et réouvre le popup avec le nouveau contenu
-                    console.log('Next issue: ', issue.key);
-                }
-            },
-            {
-                label: 'Go to Jira ticket',
-                callback: () => {
-                    const issue = jiraIssues[currentIndex];
-                    const url = `https://jira-mon.atlassian.net/browse/${issue.key}`;
-                    WA.nav.openTab(url); // Redirige l'utilisateur vers le ticket Jira
-                }
-            }
 
-        ]);
+            ]);
     };
 
     updatePopupContent(); // Appelle cette fonction pour fie ppete le premier popup
