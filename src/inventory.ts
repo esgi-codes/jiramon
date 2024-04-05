@@ -23,11 +23,40 @@ function initInventory(userId: string, jiraIssues: JiraIssue[]) {
 function addToInventory(issue: JiraIssue): void {
     WA.player.state.inventorySize = (WA.player.state.inventorySize as number) + 1;
 
+    const rarityImageSrc = [
+        {
+            'name': 'legendary',
+            'imageSrc': 'https://lh3.googleusercontent.com/d/1O8Tw3hq1b80jCPA9WMme7GO24Bh83LWk=w1000?authuser=0'
+        },
+        {
+            'name': 'epic',
+            'imageSrc': 'https://lh3.googleusercontent.com/d/1Xi8z7MVHulr01WJkq6qUsaTvzkiW8-MJ=w1000?authuser=0'
+        },
+        {
+            'name': 'uncommon',
+            'imageSrc': 'https://lh3.googleusercontent.com/d/1lvQ5nEUS_wdb0kwc_g5EJVEdwbF7BQqf=w1000?authuser=0'
+        },
+        {
+            'name': 'common',
+            'imageSrc': 'https://lh3.googleusercontent.com/d/1m2ytC5Ie4l_1Kp-Tqu8aIn973j0DzAJX=w1000?authuser=0'
+        },
+        {
+            'name': 'rare',
+            'imageSrc': 'https://lh3.googleusercontent.com/d/1DlWcMOwnjg8kK93Lz8iocx_tNU0XY1G5=w1000?authuser=0'
+        },
+        {
+            'name': 'mythic',
+            'imageSrc': 'https://lh3.googleusercontent.com/d/1QrGVa0Vr_RLKTFs2g_4RBLe5XA_TKPAP=w1000?authuser=0'
+        }
+    ]
+
+    const rarity = rarityImageSrc.find(rarity => rarity.name === issue.fields.customfield_10060?.value.toLowerCase());
+
     WA.ui.actionBar.addButton({
         id: issue.id,
         toolTip: issue.fields.summary,
         type: 'action',
-        imageSrc: 'https://pics.clipartpng.com/midle/Red_Dice_PNG_Clip_Art-2654.png',
+        imageSrc: rarity?.imageSrc ?? 'https://lh3.googleusercontent.com/d/1m2ytC5Ie4l_1Kp-Tqu8aIn973j0DzAJX=w1000?authuser=0',
         callback: () => {
             if (WA.player.state.canRemoveTicket) {
                 removeIssueFromInventory(issue.id);
