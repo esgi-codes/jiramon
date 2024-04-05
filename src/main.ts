@@ -12,7 +12,8 @@ import { initPlayerStates } from "./player";
 console.log('Script started successfully');
 
 const userIdMap: UserIdMap = {
-    'adia-dev': '5f9f40bec2e5390077a882f5'
+    'adia-dev': '5f9f40bec2e5390077a882f5',
+    'vithushan': '712020:0854f1d3-6e21-4be9-ac7a-b18393a8683c'
 };
 
 async function initScript(): Promise<void> {

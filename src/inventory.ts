@@ -14,7 +14,7 @@ function initInventory(userId: string, jiraIssues: JiraIssue[]) {
     WA.player.state.saveVariable('inventorySize', 0);
     console.log('Initializing inventory for user', userId);
     jiraIssues
-        .filter(issue => issue.fields.assignee?.accountId === userId && !["DONE", "BACKLOG"].includes(issue.fields.status.name))
+    .filter(issue => issue.fields.assignee?.accountId === userId && !["DONE", "BACKLOG"].includes(issue.fields.status.name))
         .forEach(issue => addToInventory(issue));
 
 }

@@ -4,12 +4,14 @@ const JIRA_BROWSE_URL = 'https://jira-mon.atlassian.net/browse/';
 
 function initMapStates() {
     WA.state.userIdMap = {
-        'adia-dev': '5f9f40bec2e5390077a882f5'
-    };
+        'adia-dev': '5f9f40bec2e5390077a882f5',
+        };
 }
 
 function spawnIssues(jiraIssues: any[]) {
-    jiraIssues.forEach((issue, index) => {
+    jiraIssues
+        .filter(issue =>  !["DONE"].includes(issue.fields.status.name))
+        .forEach((issue, index) => {
         const randomX = Math.floor(Math.random() * 20);
         const randomY = Math.floor(Math.random() * 20);
         const ticketRarity = getIssueRarity(issue);
