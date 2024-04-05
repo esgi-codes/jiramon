@@ -2,12 +2,12 @@
 
 /// <reference types="@workadventure/iframe-api-typings" />
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
-import axiosInstance from "./axiosInstance";
 import { JiraIssue, UserIdMap } from "./types";
 import { enforceInventoryLimits, initInventory } from "./inventory";
 import { closePopup, disableTicketDeletion, displayCurrentTime, displayJiraBoard, enableTicketDeletion } from "./utils";
 import { spawnIssues } from "./map";
 import { initPlayerStates } from "./player";
+import { getAllIssues as getAllJiraIssues } from "./jiraClient";
 
 console.log('Script started successfully');
 
@@ -24,7 +24,7 @@ async function initScript(): Promise<void> {
 
         initPlayerStates();
 
-        const jiraIssues: JiraIssue[] = (await axiosInstance.get<JiraIssue[]>('jira/issues')).data;
+        const jiraIssues: JiraIssue[] = await getAllJiraIssues();
         spawnIssues(jiraIssues);
         handleInventory(jiraIssues);
         handleAreas(jiraIssues);

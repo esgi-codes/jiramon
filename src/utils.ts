@@ -1,3 +1,4 @@
+import { ActionMessage, Popup } from "@workadventure/iframe-api-typings";
 import { JiraIssue } from "./types";
 
 
@@ -13,31 +14,7 @@ export function displayCurrentTime(): void {
 /**
  * Displays Jira issues on the board area.
  */
-export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
-    const issuesString = jiraIssues.map(issue => formatIssueString(issue)).join('\n');
-    const issuesMessages = jiraIssues.map((issue, index) => {
-        return {
-            index,
-            message: formatIssueString(issue),
-            callback: () => WA.nav.goToPage(`https://jira-mon.atlassian.net/browse/${issue.key}`)
-        };
-    });
-
-    WA.player.state.jiraBoardPopup = WA.ui.openPopup("jiraPopup", issuesMessages[0].message, [
-        {
-            label: 'Close',
-            callback: () => WA.player.state.jiraBoardPopup.close()
-        },
-        {
-            label: 'Next',
-            callback: () => {
-                const currentMessage = issuesMessages.shift();
-                issuesMessages.push(currentMessage);
-
-                WA.player.state.jiraBoardPopup.close();
-            }
-        }
-    ]);
+export function displayJiraBoard(_jiraIssues: JiraIssue[]): void {
 }
 
 /**
@@ -58,7 +35,7 @@ export function enableTicketDeletion(filled: boolean | undefined): void {
         });
 
         setTimeout(() => {
-            WA.player.state.trashActionMessage.remove();
+            (WA.player.state.trashActionMessage as ActionMessage).remove();
             WA.player.state.trashActionMessage = undefined;
         }, 5000);
 
@@ -78,7 +55,7 @@ export function enableTicketDeletion(filled: boolean | undefined): void {
     }
 
     setTimeout(() => {
-        WA.player.state.trashActionMessage.remove();
+        (WA.player.state.trashActionMessage as ActionMessage).remove();
         WA.player.state.trashActionMessage = undefined;
     }, 5000);
 }
@@ -89,7 +66,7 @@ export function enableTicketDeletion(filled: boolean | undefined): void {
 export function disableTicketDeletion(): void {
     WA.player.state.canRemoveTicket = false;
     if (WA.player.state.trashActionMessage !== undefined) {
-        WA.player.state.trashActionMessage.remove();
+        (WA.player.state.trashActionMessage as ActionMessage).remove();
         WA.player.state.trashActionMessage = undefined;
     }
 }
@@ -102,7 +79,7 @@ export function closePopup(popup: any = undefined): void {
         popup.close();
         popup = undefined;
     } else if (WA.player.state.currentPopup !== undefined) {
-        WA.player.state.currentPopup.close();
+        (WA.player.state.currentPopup as Popup).close();
         WA.player.state.currentPopup = undefined;
     }
 }
