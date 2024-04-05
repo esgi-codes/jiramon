@@ -1,6 +1,11 @@
 import axiosInstance from "./axiosInstance";
 import { JiraIssue } from "./types";
 
+enum IssueCategory
+{
+    Todo = 'todo',
+    Backlog = 'backlog',
+}
 
 async function getAllIssues(): Promise<JiraIssue[]> {
     return (await axiosInstance.get<JiraIssue[]>('jira/issues')).data;
@@ -28,4 +33,8 @@ async function assignIssue(issueId: string, assignee: string): Promise<boolean> 
     return true;
 }
 
-export { getAllIssues, unassignIssue, assignIssue };
+async function getRandIssue(category: IssueCategory): Promise<JiraIssue> {
+    return (await axiosInstance.get<JiraIssue>(`/jira/issues/random/${category}`)).data;
+}
+
+export { getAllIssues, unassignIssue, assignIssue, getRandIssue, IssueCategory };
