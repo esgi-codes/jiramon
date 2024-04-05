@@ -831,15 +831,15 @@
          "tilewidth":32
         }, 
         {
-         "columns":6,
+         "columns":7,
          "firstgid":2965,
          "image":"tilesets\/rarity.png",
          "imageheight":32,
-         "imagewidth":192,
+         "imagewidth":224,
          "margin":0,
          "name":"rarity",
          "spacing":0,
-         "tilecount":6,
+         "tilecount":7,
          "tileheight":32,
          "tiles":[
                 {
@@ -848,7 +848,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"legendaryIssue"
+                         "value":"commonIssue"
                         }]
                 }, 
                 {
@@ -857,7 +857,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"mythicIssue"
+                         "value":"rareIssue"
                         }]
                 }, 
                 {
@@ -866,7 +866,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"commonIssue"
+                         "value":"uncommonIssue"
                         }]
                 }, 
                 {
@@ -875,7 +875,7 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"uncommonIssue"
+                         "value":"mythicIssue"
                         }]
                 }, 
                 {
@@ -884,11 +884,45 @@
                         {
                          "name":"name",
                          "type":"string",
-                         "value":"rareIssue"
+                         "value":"legendaryIssue"
                         }]
                 }, 
                 {
+                 "animation":[
+                        {
+                         "duration":100,
+                         "tileid":1
+                        }, 
+                        {
+                         "duration":100,
+                         "tileid":0
+                        }, 
+                        {
+                         "duration":100,
+                         "tileid":2
+                        }, 
+                        {
+                         "duration":100,
+                         "tileid":3
+                        }, 
+                        {
+                         "duration":100,
+                         "tileid":4
+                        }, 
+                        {
+                         "duration":100,
+                         "tileid":6
+                        }],
                  "id":5,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"shinyIssue"
+                        }]
+                }, 
+                {
+                 "id":6,
                  "properties":[
                         {
                          "name":"name",
