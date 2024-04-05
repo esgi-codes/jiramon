@@ -79,4 +79,4 @@ function enforceInventoryLimits(): void {
     }
 }
 
-export { initInventory, enforceInventoryLimits };
+export { initInventory, enforceInventoryLimits , addToInventory};

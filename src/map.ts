@@ -23,14 +23,16 @@ function getRandomCoordinate(arr: number[], width: number, height: number): [num
 
 async function spawnIssues(jiraIssues: any[]) {
     const collisionsLayer = (await (WA.room.getTiledMap())).layers[1];
-
-
-
+    
     jiraIssues
         .filter(issue => !["DONE"].includes(issue.fields.status.name))
         .forEach((issue, index) => {
-            const coordinates = getRandomCoordinate(collisionsLayer.data, collisionsLayer.width, collisionsLayer.height);
-            const [randomX, randomY] = coordinates as [number, number];
+        const coordinates= getRandomCoordinate(collisionsLayer.data, collisionsLayer.width, collisionsLayer.height);
+        const randomX = coordinates[0];
+        const randomY = coordinates[1];
+
+        WA.player.state.ticketsCount += 1;
+        const ticketsCount = WA.player.state.loadVariable("ticketsCount");
             const ticketRarity = getIssueRarity(issue);
             const ticketTile = `${ticketRarity}Issue`;
             WA.room.setTiles([
@@ -46,11 +48,11 @@ async function spawnIssues(jiraIssues: any[]) {
                 width: 32,
                 x: randomX * 32,
                 y: randomY * 32,
-                name: "issue_" + index,
+                name: "issue_" + ticketsCount,
             })
-            WA.room.area.onEnter('issue_' + index).subscribe(() => {
+            WA.room.area.onEnter('issue_' + ticketsCount).subscribe(() => {
                 WA.ui.actionBar.addButton({
-                    id: 'assign_issue_' + index,
+                    id: 'assign_issue_' + ticketsCount,
                     label: `Assign ${issue.key} to me`,
                     toolTip: issue.fields.summary,
                     callback: () => {
@@ -71,8 +73,8 @@ async function spawnIssues(jiraIssues: any[]) {
                 }, 3000)
                 WA.player.state.currentPopup = WA.ui.openPopup("issue-popup", issue.fields.description, []);
             })
-            WA.room.area.onLeave('issue_' + index).subscribe(() => {
-                WA.ui.actionBar.removeButton('assign_issue_' + index);
+            WA.room.area.onLeave('issue_' + ticketsCount).subscribe(() => {
+                WA.ui.actionBar.removeButton('assign_issue_' + ticketsCount);
                 closePopup()
             })
         })
