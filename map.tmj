@@ -1035,6 +1035,16 @@
          "spacing":0,
          "tilecount":32,
          "tileheight":32,
+         "tiles":[
+                {
+                 "id":1,
+                 "properties":[
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"empty"
+                        }]
+                }],
          "tilewidth":32
         }],
  "tilewidth":32,

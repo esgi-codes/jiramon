@@ -59,6 +59,14 @@ async function spawnIssues(jiraIssues: any[]) {
                     toolTip: issue.fields.summary,
                     callback: () => {
                         addToInventory(issue);
+                        WA.room.setTiles([
+                            {
+                                x: randomX,
+                                y: randomY,
+                                tile: 'empty',
+                                layer: "above/above2"
+                            }
+                        ])
                         assignIssue(issue.key, WA.player.state.jiraAccountId as string);
                     },
                 });
