@@ -36,7 +36,7 @@ async function initScript(): Promise<void> {
     }
 }
 
-function setIntervalEnforceInventoryLimits():void {
+function setIntervalEnforceInventoryLimits(): void {
     setInterval(() => enforceInventoryLimits(), 20 * 1000);
 }
 
