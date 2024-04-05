@@ -68,7 +68,7 @@ function enforceInventoryLimits(): void {
         const triggerMessage = WA.ui.displayActionMessage({
             message,
             callback: () => {
-                WA.nav.goToPage(JIRA_ASSIGNEE_URL + WA.player.state.jiraAccountId);
+                WA.nav.openTab(JIRA_ASSIGNEE_URL + WA.player.state.jiraAccountId);
             }
         });
 

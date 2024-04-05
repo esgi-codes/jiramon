@@ -51,7 +51,7 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
                 callback: () => {
                     const issue = jiraIssues[currentIndex];
                     const url = `https://jira-mon.atlassian.net/browse/${issue.key}`;
-                    WA.nav.goToPage(url); // Redirige l'utilisateur vers le ticket Jira
+                    WA.nav.openTab(url); // Redirige l'utilisateur vers le ticket Jira
                 }
             }
 

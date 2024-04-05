@@ -62,7 +62,7 @@ async function spawnIssues(jiraIssues: any[]) {
                 const triggerMessage = WA.ui.displayActionMessage({
                     message: `[${ticketRarity.toLocaleUpperCase()}]Ticket ${issue.key} : ${issue.fields.summary} (${issue.fields.status.name})`,
                     callback: () => {
-                        WA.nav.goToPage(JIRA_BROWSE_URL + issue.key);
+                        WA.nav.openTab(JIRA_BROWSE_URL + issue.key);
                     }
                 });
                 setTimeout(() => {
