@@ -28,7 +28,7 @@ async function initScript(): Promise<void> {
         spawnIssues(jiraIssues);
         handleInventory(jiraIssues);
         handleAreas(jiraIssues);
-
+        setIntervalEnforceInventoryLimits();
         await bootstrapExtra();
         console.log('Scripting API Extra ready');
     } catch (error) {
@@ -36,9 +36,12 @@ async function initScript(): Promise<void> {
     }
 }
 
+function setIntervalEnforceInventoryLimits():void {
+    setInterval(() => enforceInventoryLimits(), 20 * 1000);
+}
+
 function handleInventory(jiraIssues: JiraIssue[]): void {
     initInventory(userIdMap[WA.player.name], jiraIssues);
-    enforceInventoryLimits();
 }
 
 function handleAreas(jiraIssues: JiraIssue[]): void {

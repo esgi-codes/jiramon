@@ -2,12 +2,35 @@ import { closePopup, getIssueRarity } from "./utils";
 
 const JIRA_BROWSE_URL = 'https://jira-mon.atlassian.net/browse/';
 
-function spawnIssues(jiraIssues: any[]) {
+function getRandomCoordinate(arr: number[], width: number, height: number): [number, number] | null {
+    const zeroCoordinates: [number, number][] = [];
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            if (arr[y * width + x] === 0) {
+                zeroCoordinates.push([x, y]);
+            }
+        }
+    }
+
+    if (zeroCoordinates.length === 0) {
+        return null;
+    }
+
+    const randomIndex = Math.floor(Math.random() * zeroCoordinates.length);
+    return zeroCoordinates[randomIndex];
+}
+
+async function spawnIssues(jiraIssues: any[]) {
+    const collisionsLayer = (await (WA.room.getTiledMap())).layers[1];
+
+
+
     jiraIssues
-        .filter(issue => !["DONE"].includes(issue.fields.status.name))
+        .filter(issue =>  !["DONE"].includes(issue.fields.status.name))
         .forEach((issue, index) => {
-            const randomX = Math.floor(Math.random() * 20);
-            const randomY = Math.floor(Math.random() * 20);
+        const coordinates= getRandomCoordinate(collisionsLayer.data, collisionsLayer.width, collisionsLayer.height);
+        const randomX = coordinates[0];
+        const randomY = coordinates[1];
             const ticketRarity = getIssueRarity(issue);
             const ticketTile = `${ticketRarity}Issue`;
             WA.room.setTiles([
