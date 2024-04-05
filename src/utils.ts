@@ -68,7 +68,6 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
 
 export async function displayJiraAssignmentMessage(userJiraId: string, issueCategory: IssueCategory, popupName: string): Promise<boolean> {
     const randIssue = await getRandIssue(issueCategory);
-
     const message = 'Beware of the grass! You have been force assigned the below ticket:'
 
     try {
@@ -88,6 +87,10 @@ export async function displayJiraAssignmentMessage(userJiraId: string, issueCate
                 }
             }
         ]);
+
+    setTimeout(() => {
+        (WA.player.state.randomIssueAssignedPopup as Popup).close();
+    }, 10000);
 
     return true;
 }
