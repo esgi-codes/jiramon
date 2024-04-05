@@ -5,6 +5,7 @@ function initPlayerStates(jiraAccountId: string) {
     WA.player.state.saveVariable('trashActionMessage', {});
     WA.player.state.saveVariable('inventorySize', 0);
     WA.player.state.saveVariable('issuesOnTheFloor', new Map());
+    WA.player.state.saveVariable('randomIssueAssignedPopup', {});
 
     WA.player.state.jiraAccountId = jiraAccountId;
 }

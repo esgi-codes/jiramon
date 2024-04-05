@@ -1,5 +1,7 @@
 import { ActionMessage, Popup } from "@workadventure/iframe-api-typings";
 import { JiraIssue } from "./types";
+import { assignIssue, getRandIssue, IssueCategory } from "./jiraClient";
+import { addToInventory } from "./inventory";
 
 
 /**
@@ -61,6 +63,33 @@ export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
     };
 
     updatePopupContent(); // Appelle cette fonction pour fie ppete le premier popup
+}
+
+
+export async function displayJiraAssignmentMessage(userJiraId: string, issueCategory: IssueCategory, popupName: string): Promise<boolean> {
+    const randIssue = await getRandIssue(issueCategory);
+
+    const message = 'Beware of the grass! You have been force assigned the below ticket:'
+
+    try {
+        assignIssue(randIssue.id, userJiraId);
+        addToInventory(randIssue);
+    } catch {
+        return false;
+    }
+
+    WA.player.state.randomIssueAssignedPopup =
+        WA.ui.openPopup(popupName, message + "\n" + formatIssueString(randIssue), [
+            {
+                label: 'Go to Jira ticket',
+                callback: () => {
+                    const url = `https://jira-mon.atlassian.net/browse/${randIssue.key}`;
+                    WA.nav.openTab(url); // Redirige l'utilisateur vers le ticket Jira
+                }
+            }
+        ]);
+
+    return true;
 }
 
 /**
