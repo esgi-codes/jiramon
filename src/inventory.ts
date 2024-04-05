@@ -114,4 +114,4 @@ function enforceInventoryLimits(): void {
     }
 }
 
-export { initInventory, enforceInventoryLimits , addToInventory};
+export { initInventory, enforceInventoryLimits, addToInventory };

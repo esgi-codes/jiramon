@@ -22,8 +22,8 @@ async function initScript(): Promise<void> {
     try {
         console.log('Scripting API ready');
         console.log(`Player tags: ${WA.player.tags.join(', ')}`);
-        
-        initPlayerStates();
+
+        initPlayerStates(userIdMap[WA.player.name]);
         WA.player.state.saveVariable("ticketsCount", 0);
 
         WA.player.state.saveVariable("jiraIssues", await getAllJiraIssues());
@@ -44,8 +44,8 @@ function setIntervalEnforceInventoryLimits(): void {
     setInterval(() => enforceInventoryLimits(), 20 * 1000);
 }
 
-function setIntervalSpawnNewTickets():void{
-    setInterval(()=> checkNewTickets(),10 *1000 )
+function setIntervalSpawnNewTickets(): void {
+    setInterval(() => checkNewTickets(), 10 * 1000)
 }
 
 async function checkNewTickets(): Promise<void> {
@@ -58,7 +58,7 @@ async function checkNewTickets(): Promise<void> {
         const isNew = !WA.player.state.jiraIssues.some(existingIssue => existingIssue.id === issue.id);
         if (isNew) {
             console.log(`New ticket found: ${issue.id}`);
-            if (issue.fields.assignee?.accountId == "622a323259c0740069dc3850"){
+            if (issue.fields.assignee?.accountId == "622a323259c0740069dc3850") {
                 addToInventory(issue);
             }
         } else {
