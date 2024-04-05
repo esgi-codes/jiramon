@@ -15,7 +15,29 @@ export function displayCurrentTime(): void {
  */
 export function displayJiraBoard(jiraIssues: JiraIssue[]): void {
     const issuesString = jiraIssues.map(issue => formatIssueString(issue)).join('\n');
-    WA.player.state.jiraBoardPopup = WA.ui.openPopup("jiraPopup", issuesString, []);
+    const issuesMessages = jiraIssues.map((issue, index) => {
+        return {
+            index,
+            message: formatIssueString(issue),
+            callback: () => WA.nav.goToPage(`https://jira-mon.atlassian.net/browse/${issue.key}`)
+        };
+    });
+
+    WA.player.state.jiraBoardPopup = WA.ui.openPopup("jiraPopup", issuesMessages[0].message, [
+        {
+            label: 'Close',
+            callback: () => WA.player.state.jiraBoardPopup.close()
+        },
+        {
+            label: 'Next',
+            callback: () => {
+                const currentMessage = issuesMessages.shift();
+                issuesMessages.push(currentMessage);
+
+                WA.player.state.jiraBoardPopup.close();
+            }
+        }
+    ]);
 }
 
 /**
